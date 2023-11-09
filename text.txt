@@ -1,0 +1,7 @@
+python manage.py runserver
+python manage.py migrate
+python manage.py makemigrations
+
+admin acc:
+noicomcuatoi1@gmail.com
+0865780026An
