@@ -1,8 +1,9 @@
 from django.http import HttpResponse, JsonResponse
-from django.shortcuts import render
+from django.shortcuts import render, get_object_or_404
 from core.admin import ProductAdmin
 from core.models import Product, Category, Vendor, CartOrder, CartOrderItems, ProductImages, ProductReview, wishlist, Address
 from django.db.models import Count ,Avg
+from taggit.models import Tag
 from core.forms import ProductReviewForm
 def index(request):
     # products = Product.objects.all().order_by("-id")
@@ -81,6 +82,20 @@ def product_detail_view(request, pid):
     }
     
     return render(request, "core/product-detail.html", context)
+
+def tag_list(request, tag_slug=None):
+    products = Product.objects.filter(product_status="published").order_by("-id")
+    
+    tag = None
+    if tag_slug:
+        tag = get_object_or_404(Tag, slug=tag_slug)
+        products = products.filter(tags__in=[tag])
+        
+    context = {
+        "products": products,
+        "tag": tag,
+    }
+    return render(request, "core/tag.html", context)
 
 def ajax_add_review(request, pid):
     product = Product.objects.get(pk=pid)
