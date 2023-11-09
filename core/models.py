@@ -122,8 +122,8 @@ class Product(models.Model):
         return self.title
     
     def get_precentage(self):
-        new_price = (self.price / self.old_price) * 100
-        return new_price
+        discountPercent = 100 - (self.price / self.old_price) * 100
+        return discountPercent
     
 class ProductImages(models.Model):
     images = models.ImageField(upload_to="product-image", default="product.jpg")

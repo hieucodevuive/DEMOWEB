@@ -96,7 +96,7 @@
                                                 </ul>
                                                 <ul class="float-start">
                                                     {% comment %} <li class="mb-5">SKU: <a href="#">FWM15VKT</a></li> {% endcomment %}
-                                                    {% comment %} <li class="mb-5">Tags: <a href="#" rel="tag">{% for tag in p.tags.all %} {% endfor %}</a></li> {% endcomment %}
+                                                    <li class="mb-5">Tags: {% for tag in p.tags.all %}<a href="{% url 'core:tags' tag.slug %}" rel="tag">#{{tag.name}} {% endfor %}</a></li>
                                                     <li>Stock:<span class="in-stock text-brand ml-5">{{p.stock_count}}</span></li>
                                                 </ul>
                                             </div>
