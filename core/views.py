@@ -5,6 +5,7 @@ from core.models import Product, Category, Vendor, CartOrder, CartOrderItems, Pr
 from django.db.models import Count ,Avg
 from taggit.models import Tag
 from core.forms import ProductReviewForm
+
 def index(request):
     # products = Product.objects.all().order_by("-id")
     products = Product.objects.filter(product_status = "published", featured=True)
@@ -13,7 +14,6 @@ def index(request):
         "products":products
     }
     return render(request, 'core/index.html', context)
-
 
 def product_list_view(request):
     products = Product.objects.filter(product_status = "published")
@@ -70,15 +70,24 @@ def product_detail_view(request, pid):
     review_form = ProductReviewForm()
     # p_image = product.p_images.all()
     
+    make_review =  True
+    
+    if request.user.is_authenticated:
+        user_review_count = ProductReview.objects.filter(user=request.user, product=product).count()
+        
+        if user_review_count > 0:
+            make_review = False
+    
     context ={
         "p": product,
         "p_image": p_image,
         "review_form": review_form,
+        "make_review": make_review,
         "reviews": reviews,
         "average_rating": average_rating,
         "products": products,
-
-
+        
+        
     }
     
     return render(request, "core/product-detail.html", context)
@@ -115,7 +124,7 @@ def ajax_add_review(request, pid):
 
     }
     
-    average_reviews = ProductReview.objects.filter(product=product).aaggregate(rating=Avg("rating"))
+    average_reviews = ProductReview.objects.filter(product=product).aggregate(rating=Avg("rating"))
     
     return JsonResponse(
       {  
