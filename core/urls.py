@@ -12,6 +12,7 @@ from core.views import (
     vendor_list_view, 
     search_view,
     filter_product,
+    add_to_cart,
     )
 app_name = "core"
 
@@ -36,5 +37,8 @@ urlpatterns = [
     # Search
     path("search/", search_view, name="search"),
     #
-    path("filter-products/", filter_product, name="filter-product")
+    path("filter-products/", filter_product, name="filter-product"),
+    #Add to cart
+    path("add-to-cart/", add_to_cart, name="add-to-cart"),
+
 ]
