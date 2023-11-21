@@ -227,10 +227,10 @@
                                             <option>New Mexico</option>
                                             <option>New York</option>
                                         </select>
-                                    </form>
+                                    </form>sss
                                 </div>
                                 <div class="header-action-icon-2">
-                                    <a href="shop-compare.html">
+                                    <a href="">
                                         <img class="svgInject" alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-compare.svg' %}" />
                                         <span class="pro-count blue">3</span>
                                     </a>
@@ -244,7 +244,7 @@
                                     <a href="shop-wishlist.html"><span class="lable">Wishlist</span></a>
                                 </div>
                                 <div class="header-action-icon-2">
-                                    <a class="mini-cart-icon" href="{% url "core:cart"}">
+                                    <a class="mini-cart-icon" href="{% url 'core:cart'%}">
                                         <img alt="Nest" src="{% static 'assets/imgs/theme/icons/icon-cart.svg' %}" />
                                         <span class="pro-count blue cart-items-count">{{request.session.cart_data_obj|length}}</span>
                                     </a>

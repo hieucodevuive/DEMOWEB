@@ -1,4 +1,4 @@
-console.log("working fire 2");
+console.log("working fire 5");
 $("#commentForm").submit(function(e){
     e.preventDefault();
 
@@ -23,32 +23,6 @@ $("#commentForm").submit(function(e){
         }
         })
 })
-
-
-
-// $(document).ready(function (){
-//     $(".filter-checkbox").on("click", function(){
-//         let filter_object = {}
-//         $(".filter-checkbox").each(function(){
-//             let filter_value = $(this).val()
-//             let filter_key = $(this).data("filter")
-
-//             filter_object[filter_key] = Array.from(document.querySelectorAll('input[data-filter=' + filter_key + ']:checked')).map(function(element){
-//                 return element.value
-//             })
-//         $.ajax({
-//             url: '/filter-products',
-//             data: filter_object,
-//             dataType: 'json',
-//             beforeSend: function() {
-//             },
-//             success: function(response) {
-//                 $("#filtered-product").html(response.data)
-//             },
-//         })
-//         })
-//     })
-// })
 
 $(document).ready(function (){
     $(".filter-checkbox, #price-filter-btn").on("click", function(){
@@ -118,82 +92,72 @@ $(document).ready(function (){
             return false
         }
     })
-})
 
-// add to cart function
-
-// $(".add-to-cart-btn").on("click", function(){
-   
-//     let product_id = $(".product-id").val()
-//     let product_title = $(".product-title").val()
-//     let quantity = $("#product-quantity").val()
-//     let product_price = $("#current-product-price").text()
-//     let this_val = $(this)
-
-//     console.log("############");
-//     console.log("quantity: ", quantity);
-//     console.log("product_title: ", product_title);
-//     console.log("product_id: ", product_id);
-//     console.log("product_price: ", product_price);
-
-//     $.ajax({
-//         url:'/add-to-cart',
-//         data:{
-//             'id':product_id,
-//             'qty':quantity,
-//             'title':product_title,
-//             'price':product_price
-//             },
-//         dataType: 'json',
-//         beforeSend: function(){
-//             console.log("Adding Product to Cart...");
-//         },
-//         success:function(response){
-//             console.log(response);
-//             $(".cart-items-count").text(response.totalcartitems)
-//             this_val.attr('disabled',false);
-//             }            
-//     })
-// })
-
-$(".add-to-cart-btn").on("click", function(){
-
-    let this_val = $(this)
-    let index = this_val.attr("data-index")
-   
-    let quantity = $(".product-quantity-"+ index).val()
-    let product_id = $(".product-id-"+ index).val()
-    let product_title = $(".product-title-"+ index).val()
-    let product_price = $(".current-product-price-"+ index).text()
-    let product_pid = $(".product-pid-"+ index).val()
-    let product_image = $(".product-image-"+ index).val()
-
-    console.log("############");
-    console.log("quantity: ", quantity);
-    console.log("product_title: ", product_title);
-    console.log("product_id: ", product_id);
-    console.log("product_price: ", product_price);
-    console.log("product_pid: ", product_pid);
-    console.log("product_image: ", product_image);
-
-    $.ajax({
-        url:'/add-to-cart',
-        data:{
-            'id':product_id,
-            'pid':product_pid,
-            'image':product_image,
-            'qty':quantity,
-            'title':product_title,
-            'price':product_price,
+    $(".add-to-cart-btn").on("click", function(){
+    
+        let this_val = $(this)
+        let index = this_val.attr("data-index")
+       
+        let quantity = $(".product-quantity-"+ index).val()
+        let product_id = $(".product-id-"+ index).val()
+        let product_title = $(".product-title-"+ index).val()
+        let product_price = $(".current-product-price-"+ index).text()
+        let product_pid = $(".product-pid-"+ index).val()
+        let product_image = $(".product-image-"+ index).val()
+    
+        console.log("############");
+        console.log("quantity: ", quantity);
+        console.log("product_title: ", product_title);
+        console.log("product_id: ", product_id);
+        console.log("product_price: ", product_price);
+        console.log("product_pid: ", product_pid);
+        console.log("product_image: ", product_image);
+    
+        $.ajax({
+            url:'/add-to-cart',
+            data:{
+                'id':product_id,
+                'pid':product_pid,
+                'image':product_image,
+                'qty':quantity,
+                'title':product_title,
+                'price':product_price,
+                },
+            dataType: 'json',
+            beforeSend: function(){
+                console.log("Adding Product to Cart...");
             },
-        dataType: 'json',
-        beforeSend: function(){
-            console.log("Adding Product to Cart...");
-        },
-        success: function(response){
-            this_val.html("✓")
-            $(".cart-items-count").text(response.totalcartitems)
-            this_val.attr('disabled',false);
-            }            
+            success: function(response){
+                this_val.html("✓")
+                $(".cart-items-count").text(response.totalcartitems)
+                this_val.attr('disabled',false);
+                }            
+        })
     })
+    
+    $(".delete-product").on("click", function(){
+        let product_id = $(this).attr("data-product")
+        let this_val = $(this)
+
+        console.log("product_id: ", product_id);
+
+        $.ajax({
+            url: "/delete-from-cart",
+            data: {
+                "id": product_id,
+    
+            },
+            dataType: "json",
+            beforeSend: function(){
+                this_val.hide()
+            },
+            success: function(response){
+                this_val.show()
+                $(".cart-items-count").text(response.totalcartitems)
+                $("#cart-list").html(response.data)
+            }
+        })
+    })
+
 })
+

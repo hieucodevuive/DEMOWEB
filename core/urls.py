@@ -14,6 +14,7 @@ from core.views import (
     filter_product,
     add_to_cart,
     cart_view,
+    delete_item_from_cart,
     )
 app_name = "core"
 
@@ -45,5 +46,7 @@ urlpatterns = [
     #Cart page
     path("cart/", cart_view, name="cart"),
     
+    #Cart page
+    path("delete-from-cart/", delete_item_from_cart, name="delete-from-cart"),
 
 ]
