@@ -147,29 +147,6 @@ def search_view(request):
     }
     return render(request, "core/search.html", context)
 
-# def filter_product(request):
-#     categories = request.GET.getlist("category[]")
-#     vendors = request.GET.getlist("vendor[]")
-    
-#     min_price = request.GET("min_price")
-#     max_price = request.GET("max_price")
-    
-#     products = Product.objects.filter(product_status="published").order_by("-id").distinct()
-    
-#     products = products.filter(price__gte=min_price)
-#     products = products.filter(price__lte=max_price)
-    
-#     if len(categories) > 0:
-#         products = products.filter(category__id__in = categories).distinct()
-    
-    
-#     if len(vendors) > 0:
-#         products = products.filter(vendor__id__in=vendors).distinct() 
-    
-    
-#     data = render_to_string("core/async/product-list.html", {"products": products})
-#     return JsonResponse({"data": data})
-
 def filter_product(request):
     categories = request.GET.getlist("category[]")
     vendors = request.GET.getlist("vendor[]")
@@ -231,3 +208,19 @@ def cart_view(request):
     else:
         messages.warning(request, "Your cart is emty")
         return redirect("core:index")
+
+def delete_item_from_cart(request):
+    cart_total_amount = 0
+    product_id = str(request.GET["id"])
+    if 'cart_data_obj' in request.session:
+        if product_id in request.session['cart_data_obj']:
+            cart_data = request.session['cart_data_obj']
+            del request.session['cart_data_obj'][product_id]
+            request.session['cart_data_obj'] = cart_data
+    if 'cart_data_obj' in request.session:
+        for p_id, item in request.session["cart_data_obj"].items():
+            cart_total_amount += int(item['qty']) * float(item['price'])    
+        
+    context = render_to_string("core/async/cart-list.html", {"cart_data":request.session['cart_data_obj'], 'totalcartitems': len(request.session['cart_data_obj']), 'cart_total_amount':cart_total_amount})
+    
+    return JsonResponse({"data": context, 'totalcartitems': len(request.session['cart_data_obj'])})
