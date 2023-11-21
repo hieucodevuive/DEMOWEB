@@ -1,5 +1,5 @@
 from os import name
-from django.urls import path
+from django.urls import path, include
 from core.views import (
     ajax_add_review, 
     tag_list, 
@@ -17,6 +17,8 @@ from core.views import (
     delete_item_from_cart,
     update_cart,
     checkout_view,
+    payment_completed_view,
+    payment_failed_view,
     )
 app_name = "core"
 
@@ -56,4 +58,13 @@ urlpatterns = [
     
     #check out
     path("checkout/", checkout_view, name="checkout"),
+    
+    #paypal
+    path('paypal/', include('paypal.standard.ipn.urls')),
+
+    #paypal completed
+    path('payment-completed/',payment_completed_view, name="payment-completed"),
+    
+    #paypal faile
+    path('payment-failed/', payment_failed_view, name="payment-failed"),
 ]

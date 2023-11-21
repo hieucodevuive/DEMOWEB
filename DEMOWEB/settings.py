@@ -41,9 +41,12 @@ INSTALLED_APPS = [
     #Third Party
     'taggit',
     'ckeditor',
+    #paypal integration
+    'paypal.standard.ipn',
     # custom apps
     'core',
     'userauths',
+    
 ]
 
 MIDDLEWARE = [
@@ -142,6 +145,7 @@ JAZZMIN_SETTINGS = {
     'site_logo': "assets/imgs/theme/loading.gif",
     'copyright': "anhandsome-shop.com",
 }
+LOGIN_URL = "userauths:sign-in"
 
 AUTH_USER_MODEL = 'userauths.User'
 
@@ -161,3 +165,6 @@ CKEDITOR_CONFIGS = {
         ),
     }
 }
+
+PAYPAL_RECEIVER_EMAIL = 'hieupham.code@gmail.com'
+PAYPAL_TEST = True
