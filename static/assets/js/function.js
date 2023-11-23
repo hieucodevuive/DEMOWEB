@@ -1,4 +1,4 @@
-console.log("working fire 5");
+console.log("working fire 9");
 $("#commentForm").submit(function(e){
     e.preventDefault();
 
@@ -184,6 +184,37 @@ $(document).ready(function (){
             }
         })
     })
+
+    // Making to defautl address
+    $(document).on("click", ".make-default-address", function(){
+        let id = $(this).attr("data-address-id")
+        let this_val = $(this)
+
+        console.log("ID is:", id);
+        console.log("Element is:", this_val);
+
+        $.ajax({
+            url: "/make-default-address",
+            data: {
+                "id":id
+            },
+            dataType: "json",
+            success: function(response){
+                console.log("Address Made Default....");
+                if (response.boolean == true){
+
+                    $(".check").hide()
+                    $(".action_btn").show()
+
+                    $(".check"+id).show()
+                    $(".button"+id).hide()
+
+                }
+            }
+        })
+    })
+
+
 
 })
 
