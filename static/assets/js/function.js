@@ -1,4 +1,4 @@
-console.log("working fire 9");
+console.log("working fire 1");
 $("#commentForm").submit(function(e){
     e.preventDefault();
 
@@ -215,6 +215,51 @@ $(document).ready(function (){
     })
 
 
+    //Adding to wishlist
+    $(document).on("click", ".add-to-wishlist", function(){
+        let product_id = $(this).attr("data-product-item")
+        let this_val = $(this)
 
+        console.log("product_id: "+product_id);
+
+        $.ajax({
+            url: "/add-to-wishlist",
+            data: {
+                "id": product_id,
+            },
+            dataType: "json",
+            beforeSend: function(){
+                console.log("Adding to wishlist");
+            },
+            success: function(response){
+                this_val.html("✓")
+                if(response.bool) {
+                    console.log("Added to wishlist");
+                }
+            },
+        })
+
+    })
+    
+    //Remove from wishlist delete-wishlist-product
+    $(document).on("click", ".delete-wishlist-product", function(){
+        let this_val = $(this)
+        let product_id = $(this).attr("data-wishlist-product")
+
+        console.log("product id:", product_id);
+        $.ajax({
+            url: "/remove-wishlist",
+            data: {
+            "id": product_id
+            },
+            dataType: "json",
+            beforeSend: function(){
+            console.log("Deleting...");
+            },
+            success: function(res){
+            $("#wishlist-list").html(res.data)
+            }
+            })
+    })
 })
 

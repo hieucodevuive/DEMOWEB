@@ -1,18 +1,21 @@
 from django.http import JsonResponse
 from django.shortcuts import redirect, render, get_object_or_404
 from core.admin import ProductAdmin
-from core.models import Product, Category, Vendor, CartOrder, CartOrderItems, ProductImages, ProductReview, wishlist, Address
+from core.models import Product, Category, Vendor, CartOrder, CartOrderItems, ProductImages, ProductReview, Wishlist, Address
 from django.db.models import Count ,Avg
 from taggit.models import Tag
 from core.forms import ProductReviewForm
 from django.template.loader import render_to_string
 from django.contrib import messages
+from userauths.models import Profile
 
 from django.urls import reverse
 from django.conf import settings
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_exempt
 from paypal.standard.forms import PayPalPaymentsForm
+from django.core import serializers
+
 
 def index(request):
     # products = Product.objects.all().order_by("-id")
@@ -315,6 +318,7 @@ def customer_dashboard(request):
     orders = CartOrder.objects.filter(user=request.user).order_by("-id")
     address = Address.objects.filter(user=request.user)
     
+    
     if request.method == "POST":
         address = request.POST.get("address")
         phone = request.POST.get("phone")
@@ -326,9 +330,11 @@ def customer_dashboard(request):
         )
         messages.success(request, "Address added successfully")
         return redirect("core:dashboard")
+    profile = Profile.objects.get(user=request.user)
     context = {
         "orders": orders,
         "address": address,
+        "profile": profile,
     }
     
     return render(request, 'core/dashboard.html', context)
@@ -350,3 +356,57 @@ def make_address_default(request):
     Address.objects.filter(id=id).update(status=True)
     
     return JsonResponse({"boolean": True})
+
+@login_required
+def wishlistPage(request):
+
+    wishlist = Wishlist.objects.all()
+    
+    context = {
+        "wishlist": wishlist
+    }
+    return render(request, 'core/wishlist.html', context)
+
+def add_to_wishlist(request):
+    product_id = request.GET['id']
+    product = Product.objects.get(id=product_id)
+    
+    context = {
+        
+    }
+    wishlist_count = Wishlist.objects.filter(product=product, user=request.user).count()
+    print(wishlist_count)
+    
+    if wishlist_count > 0:
+        context = {
+            "bool": True
+        }
+    else:
+        new_wishlist = Wishlist.objects.create(
+            product=product,
+            user=request.user,
+        )
+        context = {
+            "bool": True,
+        }
+    return JsonResponse(context)
+    
+def removeWishlist(request):
+    pid = request.GET['id']
+    wishlist = Wishlist.objects.filter(user=request.user)
+    product = Wishlist.objects.get(id=pid)
+    product.delete()
+    context = {
+        "bool":True,
+        "wishlist":wishlist
+    }   
+    qs_json = serializers.serialize('json', wishlist)
+
+    data = render_to_string('core/async/wishlist-list.html', context)
+    return JsonResponse({'data':data,'wishlist':qs_json})
+
+def contact(request):
+    return render(request, 'core/contact.html')
+
+def about_us(request):
+    return render(request, 'core/about-us.html')
