@@ -19,6 +19,9 @@ from core.views import (
     checkout_view,
     payment_completed_view,
     payment_failed_view,
+    customer_dashboard,
+    order_detail,
+    make_address_default,
     )
 app_name = "core"
 
@@ -67,4 +70,13 @@ urlpatterns = [
     
     #paypal faile
     path('payment-failed/', payment_failed_view, name="payment-failed"),
+    
+    #dashboard
+    path('dashboard/', customer_dashboard, name="dashboard"),
+    
+    #order detail
+    path('dashboard/order/<int:id>', order_detail, name="order-detail"),
+    
+    #Make address default
+    path('make-default-address/', make_address_default, name="make-default-address"),
 ]
